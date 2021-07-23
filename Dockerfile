@@ -1,8 +1,14 @@
-FROM centos:latest
-LABEL maintainer "leandro"
-RUN yum -y install httpd
-RUN yum -y install php
-CMD /usr/sbin/httpd -D FOREGROUND
-WORKDIR /var/www/html
-COPY index.html /var/www/html
+FROM node:14-alpine
+# Create app directory
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+ 
+# Install app dependencies
+COPY package.json /usr/src/app/
+RUN npm install
+ 
+# Bundle app source
+COPY . /usr/src/app
+ 
 EXPOSE 80
+CMD [ "npm", "start" ]
